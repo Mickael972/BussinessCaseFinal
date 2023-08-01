@@ -8,14 +8,18 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ApiResource()]
+#[ApiResource(
+    normalizationContext: ['Groups' => ['User:read']]   
+)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups('User:read')]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
@@ -44,6 +48,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $birth_date = null;
+
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?address $address = null;
 
     public function getId(): ?int
     {
@@ -190,6 +198,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setBirthDate(\DateTimeInterface $birth_date): static
     {
         $this->birth_date = $birth_date;
+
+        return $this;
+    }
+
+    public function getAddress(): ?address
+    {
+        return $this->address;
+    }
+
+    public function setAddress(address $address): static
+    {
+        $this->address = $address;
 
         return $this;
     }

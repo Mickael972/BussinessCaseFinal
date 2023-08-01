@@ -1,20 +1,43 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello NftController!{% endblock %}
+{% block title %}Nft index{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <h1>Nft index</h1>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Img</th>
+                <th>Description</th>
+                <th>Launch_date</th>
+                <th>Launch_price_eth</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for nft in nfts %}
+            <tr>
+                <td>{{ nft.id }}</td>
+                <td>{{ nft.name }}</td>
+                <td>{{ nft.img }}</td>
+                <td>{{ nft.description }}</td>
+                <td>{{ nft.launchDate ? nft.launchDate|date('Y-m-d') : '' }}</td>
+                <td>{{ nft.launchPriceEth }}</td>
+                <td>
+                    <a href="{{ path('app_nft_show', {'id': nft.id}) }}">show</a>
+                    <a href="{{ path('app_nft_edit', {'id': nft.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/Users/33620/Desktop/HB/business-case/SpaceMetaverse/src/Controller/NftController.php'|file_link(0) }}">src/Controller/NftController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/Users/33620/Desktop/HB/business-case/SpaceMetaverse/templates/nft/index.html.twig'|file_link(0) }}">templates/nft/index.html.twig</a></code></li>
-    </ul>
-</div>
+    <a href="{{ path('app_nft_new') }}">Create new</a>
 {% endblock %}

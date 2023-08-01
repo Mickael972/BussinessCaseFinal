@@ -8,14 +8,18 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: NftRepository::class)]
-#[ApiResource()]
+#[ApiResource(
+    normalizationContext: ['Groups' => ['Nft:read']]
+)]
 class Nft
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups('Nft:read')]   
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
